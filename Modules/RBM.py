@@ -30,6 +30,7 @@ class SBM(BaseRBM):
             self.mask = permuteMask(self.mask)
             
         self.nHidden = self.mask.shape[1]
+        kwargs["nHidden"] = self.nHidden
         self.sparse_loc = np.array(np.where(self.mask==1),dtype=np.int32)
         super().__init__(**kwargs)
         self.modelBaseName = "SBM"

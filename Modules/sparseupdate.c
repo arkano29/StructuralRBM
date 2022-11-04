@@ -6,7 +6,7 @@
         "depends": [],
         "name": "sparseupdate",
         "sources": [
-            "/Users/abidaurrazaga/Desktop/PhD/SparseWeightsRBM/Modules/sparseupdate.pyx"
+            "sparseupdate.pyx"
         ]
     },
     "module_name": "sparseupdate"
