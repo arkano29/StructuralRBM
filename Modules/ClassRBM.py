@@ -8,8 +8,8 @@ import sparseupdate
 
 class ClassRBM(BaseRBM):
 
-    def __init__(self,nClass = 2,**kwargs):
-        self.nClass = nClass
+    def __init__(self,**kwargs):
+        self.nClass = kwargs.get("nClass",2)
         super().__init__(**kwargs)
         self.modelBaseName = "ClassRBM"
 
@@ -78,7 +78,7 @@ class ClassRBM(BaseRBM):
         for i,c in enumerate(tf.argmax(class_label,axis = 1)):
             positive_sum[i] += o_y_j[i, : , c]
             class_weight_grad[c ,:] += positive_sum[i]
-
+        
         unfolded_input = tf.reshape(tf.repeat(input_data,self.nHidden),shape = (batch_size,self.nVisible,self.nHidden))
 
         positive_associations,elapsed_time = self.computeAssociations(unfolded_input,positive_sum)
@@ -91,7 +91,7 @@ class ClassRBM(BaseRBM):
             class_weight_grad[c, :] -= tf.reduce_sum(term, axis = 0)  
             negative_sum += term
 
-        negative_associations,elapsed_time = self.computeAssociations(unfolded_input,negative_sum)
+        negative_associations,elapsed_time = self.computeAssociations(unfolded_input,negative_sum.numpy())
         self.dW_compute_time[-1]+=elapsed_time
 
         dW = (positive_associations - negative_associations)
@@ -127,7 +127,7 @@ class ClassRBM(BaseRBM):
 
 class ClassSBM(ClassRBM):
 
-    def __init__(self,nClass = 2,**kwargs):
+    def __init__(self,**kwargs):
         self.nVisible = kwargs.get("nVisible",10)
         self.window = kwargs.get("window",0)
         self.windowList = kwargs.get("windowList",0)
@@ -146,7 +146,6 @@ class ClassSBM(ClassRBM):
         self.nHidden = self.mask.shape[1]
         kwargs["nHidden"] = self.nHidden
         self.sparse_loc = np.array(np.where(self.mask==1),dtype=np.int32)
-        self.nClass = nClass
 
         super().__init__(**kwargs)
         self.modelBaseName = "ClassSBM"

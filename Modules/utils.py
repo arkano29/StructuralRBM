@@ -36,7 +36,7 @@ def isnotebook():
 
 def read_home_dir():
   with open("./MAIN_DIR.txt","r") as file:
-      MAIN = file.readline()[:-1]
+      MAIN = file.readline()
   file.close()
   return MAIN
 
